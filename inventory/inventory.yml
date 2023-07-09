@@ -1,12 +1,10 @@
-inventory = {
-    'all': {
-        'children': {
-            'vm1': {
-                'hosts': {}
-            },
-            'vm2': {
-                'hosts': {}
-            }
-        }
+'all': {
+  'children': {
+    'vm1': {
+      'hosts': {}
+    },
+    'vm2': {
+      'hosts': {}
     }
+  }
 }

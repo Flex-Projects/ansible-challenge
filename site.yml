@@ -15,9 +15,9 @@
 - name: Provision Infrastructure
   hosts: localhost
   tasks:
-  - name: run deploy_vms role
+  - name: run deploy-vms role
     include_role:
-      name: deploy_vms
+      name: deploy-vms
 
 - name: Update Inventory File
   hosts: localhost
@@ -34,3 +34,26 @@
       executable: python3
   - name: Refresh inventory
     meta: refresh_inventory
+
+- name: Configure VMs
+  hosts: localhost
+  tasks:
+  - name: run configure-vms role
+    include_role:
+      name: configure-vms
+
+- name: Deploy template 1 to vm 1
+  hosts: ansible-vm1-pip
+  remote_user: azureuser
+  roles:
+    - deploy-site
+  vars:
+    template: colour-clock.html.j2
+
+- name: Deploy template 2 to webserver 2
+  hosts: tag_Site_webserver_1
+  remote_user: azureuser
+  roles:
+    - deploy-site
+  vars:
+    template: ascii-cam.html.j2

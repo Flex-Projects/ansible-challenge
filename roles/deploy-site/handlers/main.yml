@@ -1,0 +1,7 @@
+- name: Start service httpd, if not started
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+    enabled: true
+  become: true
+  listen: "Restart httpd"

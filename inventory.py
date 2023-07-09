@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
 subscription_id = os.environ['AZURE_SUBSCRIPTION_ID']
 resource_group_name = 'ansible-challenge'
-public_ips = ['vm1', 'vm2']
+public_ips = ['ansible-vm1-pip', 'ansible-vm2-pip']
 
 # Create the credential object
 credential = CredentialWrapper()
@@ -68,10 +68,10 @@ network_client = NetworkManagementClient(credential, subscription_id)
 host_information = {
     'all': {
         'children': {
-            'vm1': {
+            'ansible-vm1-pip': {
                 'hosts': {}
             },
-            'vm2': {
+            'ansible-vm2-pip': {
                 'hosts': {}
             }
         }
