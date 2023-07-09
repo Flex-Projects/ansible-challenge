@@ -18,3 +18,17 @@
     - name: run deploy_vms role
       include_role:
         name: deploy_vms
+
+- name: Install Azure Libraries
+  pip:
+    name:
+    - azure.identity
+    - azure.mgmt.network
+
+- name: Update Inventory File
+  ansible.builtin.script: inventory.py
+  environment: "{{ env_vars }}"
+  args:
+    executable: python3
+- name: Refresh inventory
+  meta: refresh_inventory
