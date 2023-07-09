@@ -1,1 +1,20 @@
 ---
+- name: Generate SSH Key
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: generate SSH key
+      user:
+        name: azureuser
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa_testing
+        force: no
+
+- name: Provision Infrastructure
+  hosts: localhost
+  tasks:
+    - name: run deploy_vms role
+      include_role:
+        name: deploy_vms

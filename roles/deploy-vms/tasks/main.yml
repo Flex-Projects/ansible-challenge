@@ -74,11 +74,11 @@
         resource_group: ansible-challenge
         name: vm1
         vm_size: Standard_B1s
-        admin_username: myadminuser
+        admin_username: azureuser
         ssh_password_enabled: false
         ssh_public_keys:
-          - path: ./inventory/authorized_keys
-            key_data: "{{ lookup('file', '/home/ellisjohnson/.ssh/id_rsa.pub') }}"
+          - path: /home/azureuser/.ssh/authorized_keys
+            key_data: "{{ lookup('file', '~/.ssh/id_rsa_testing.pub') }}"
         network_interfaces: [vm-nic1]
         image:
           offer: UbuntuServer
@@ -92,11 +92,11 @@
         resource_group: ansible-challenge
         name: vm2
         vm_size: Standard_B1s
-        admin_username: myadminuser
+        admin_username: azureuser
         ssh_password_enabled: false
         ssh_public_keys:
-          - path: ./inventory/authorized_keys
-            key_data: "{{ lookup('file', '/home/ellisjohnson/.ssh/id_rsa.pub') }}"
+          - path: /home/azureuser/.ssh/authorized_keys
+            key_data: "{{ lookup('file', '~/.ssh/id_rsa_testing.pub') }}"
         network_interfaces: [vm-nic2]
         image:
           offer: UbuntuServer
