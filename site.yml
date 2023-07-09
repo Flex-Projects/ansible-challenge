@@ -3,32 +3,34 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: generate SSH key
-      user:
-        name: azureuser
-        generate_ssh_key: yes
-        ssh_key_type: rsa
-        ssh_key_bits: 4096
-        ssh_key_file: .ssh/id_rsa_testing
-        force: no
+  - name: generate SSH key
+    user:
+      name: azureuser
+      generate_ssh_key: yes
+      ssh_key_type: rsa
+      ssh_key_bits: 4096
+      ssh_key_file: .ssh/id_rsa_testing
+      force: no
 
 - name: Provision Infrastructure
   hosts: localhost
   tasks:
-    - name: run deploy_vms role
-      include_role:
-        name: deploy_vms
-
-- name: Install Azure Libraries
-  pip:
-    name:
-    - azure.identity
-    - azure.mgmt.network
+  - name: run deploy_vms role
+    include_role:
+      name: deploy_vms
 
 - name: Update Inventory File
-  ansible.builtin.script: inventory.py
-  environment: "{{ env_vars }}"
-  args:
-    executable: python3
-- name: Refresh inventory
-  meta: refresh_inventory
+  hosts: localhost
+  tasks:
+  - name: Update Azure Libraries
+    pip:
+      name:
+      - azure.identity
+      - azure.mgmt.network
+  - name: update Inventory File
+    environment: "{{ env_vars }}"
+    ansible.builtin.script: inventory.py
+    args:
+      executable: python3
+  - name: Refresh inventory
+    meta: refresh_inventory

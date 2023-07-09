@@ -1,15 +1,15 @@
 import json
 import yaml
 import os
-from azure.identity import DefaultAzureCredential
 from azure.mgmt.network import NetworkManagementClient
+from cred_wrapper import CredentialWrapper
 
 subscription_id = os.environ['AZURE_SUBSCRIPTION_ID']
 resource_group_name = 'ansible-challenge'
 public_ips = ['vm1', 'vm2']
 
 # Create the credential object
-credential = DefaultAzureCredential()
+credential = CredentialWrapper()
 
 # Create the NetworkManagementClient
 network_client = NetworkManagementClient(credential, subscription_id)
