@@ -1,4 +1,11 @@
 ---
+# You will need an azure service principal before running.
+# and the following environment variables set
+# AZURE_SUBSCRIPTION_ID
+# AZURE_CLIENT_ID
+# AZURE_CLIENT_SECRET
+# AZURE_TENANT_ID
+# These are pre-filled in group_vars/all.yml
 - name: Generate SSH Key
   hosts: localhost
   connection: local
