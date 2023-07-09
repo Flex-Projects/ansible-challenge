@@ -3,7 +3,15 @@
   package:
     name:
     - httpd
+    - httpd-tools
+    - httpd-manual
+    - crypto-utils
+    - mod_fcgid
+    - mod_ssl
+    - perl-Newt
     - chrony
+    - python3
+    - python3-pip
     - wget
     - git
     - net-tools
@@ -18,3 +26,70 @@
     name: httpd
     state: started
     enabled: true
+
+- name: Generate self-signed SSL/TLS certificate
+  become: true
+  command: |
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+      -keyout /etc/pki/tls/private/localhost.key \
+      -out /etc/pki/tls/certs/localhost.crt \
+      -subj "/CN=webserver_ec2"
+  args:
+    creates:
+    - /etc/pki/tls/private/localhost.key
+    - /etc/pki/tls/certs/localhost.crt
+
+- name: Configure Apache SSL module
+  become: true
+  lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+  - {regexp: '^SSLCertificateFile', line: 'SSLCertificateFile /etc/pki/tls/certs/localhost.crt'}
+  - {regexp: '^SSLCertificateKeyFile', line: 'SSLCertificateKeyFile /etc/pki/tls/private/localhost.key',}
+
+- name: Restart Apache service
+  become: true
+  service:
+    name: httpd
+    state: restarted
+
+- name: SSH hardening
+  become: true
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+  - {regexp: '^PermitRootLogin', line: 'PermitRootLogin no'}
+  - {regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no'}
+  - {regexp: '^X11Forwarding', line: 'X11Forwarding no'}
+  - {regexp: '^PermitEmptyPasswords', line: 'PermitEmptyPasswords no',}
+
+- name: Configure chrony
+  become: true
+  yum:
+    name: chrony
+    state: present
+
+- name: Set chrony configuration
+  become: true
+  lineinfile:
+    path: /etc/chrony.conf
+    line: "{{ item }}"
+  with_items:
+  - server time.nist.gov iburst
+  - allow 192.168.0.0/24
+
+- name: Start chrony service
+  become: true
+  service:
+    name: chronyd
+    state: started
+    enabled: true
+
+- name: Set timezone to Australia/Melbourne
+  become: true
+  timezone:
+    name: Australia/Melbourne

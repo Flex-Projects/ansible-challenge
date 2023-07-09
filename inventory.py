@@ -59,13 +59,12 @@ subscription_id = os.environ['AZURE_SUBSCRIPTION_ID']
 resource_group_name = 'ansible-challenge'
 public_ips = ['ansible-vm1-pip', 'ansible-vm2-pip']
 
-# Create the credential object
+# Create the credential object using the customer wrapper to bypass the library issues
 credential = CredentialWrapper()
 
-# Create the NetworkManagementClient
 network_client = NetworkManagementClient(credential, subscription_id)
 
-host_information = {
+inventory = {
     'all': {
         'children': {
             'ansible-vm1-pip': {
@@ -79,18 +78,16 @@ host_information = {
 }
 
 for public_ip in public_ips:
-    # Get the public IP details
     ip_details = network_client.public_ip_addresses.get(resource_group_name, public_ip)
     host_info = {
         'ansible_host': ip_details.ip_address,
         'ansible_user': "azureuser"
     }
 
-    host_information['all']['children'][public_ip]['hosts'] = host_info
+    inventory['all']['children'][public_ip]['hosts'] = host_info
 
-# Write the inventory to the file
 with open('inventory/inventory.yml', 'w') as inventory_file:
-    inventory_file.write(yaml.dump(host_information))
+    inventory_file.write(yaml.dump(inventory))
 
-# Output the inventory dictionary as JSON
-print(json.dumps(host_information))
+# Output the inventory as JSON
+print(json.dumps(inventory))
