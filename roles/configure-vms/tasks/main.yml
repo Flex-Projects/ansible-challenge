@@ -1,14 +1,20 @@
-- name: Update apt cache
-  apt:
-    update_cache: yes
-
-- name: Install Apache HTTP Server
-  apt:
-    name: apache2
+- name: Install packages
+  become: true
+  package:
+    name:
+    - httpd
+    - chrony
+    - wget
+    - git
+    - net-tools
+    - curl
+    - tree
+    - unzip
     state: present
 
-- name: Start Apache service
+- name: Start and enable httpd service
+  become: true
   service:
-    name: apache2
+    name: httpd
     state: started
-    enabled: yes
+    enabled: true

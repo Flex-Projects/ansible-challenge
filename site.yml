@@ -36,7 +36,7 @@
     meta: refresh_inventory
 
 - name: Configure VMs
-  hosts: localhost
+  hosts: ansible-vm1-pip, ansible-vm2-pip
   tasks:
   - name: run configure-vms role
     include_role:
@@ -50,8 +50,8 @@
   vars:
     template: colour-clock.html.j2
 
-- name: Deploy template 2 to webserver 2
-  hosts: tag_Site_webserver_1
+- name: Deploy template 2 to vm 2
+  hosts: ansible-vm2-pip
   remote_user: azureuser
   roles:
     - deploy-site
