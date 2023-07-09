@@ -17,11 +17,18 @@
     address_prefix_cidr: 10.0.0.0/24
     state: present
 
-- name: Create public IP address
+- name: Create public IP address for vm1
   azure_rm_publicipaddress:
     resource_group: ansible-challenge
     allocation_method: Static
-    name: ansible-pip
+    name: ansible-vm1-pip
+    state: present
+
+- name: Create public IP address for vm2
+  azure_rm_publicipaddress:
+    resource_group: ansible-challenge
+    allocation_method: Static
+    name: ansible-vm2-pip
     state: present
 
 - name: Create network security group
@@ -49,7 +56,7 @@
     name: vm-nic1
     virtual_network: ansible-vnet
     subnet: ansible-subnet
-    public_ip_name: ansible-pip
+    public_ip_name: ansible-vm1-pip
     security_group: ansible-nsg
     state: present
 
@@ -59,7 +66,7 @@
     name: vm-nic2
     virtual_network: ansible-vnet
     subnet: ansible-subnet
-    public_ip_name: ansible-pip
+    public_ip_name: ansible-vm2-pip
     security_group: ansible-nsg
     state: present
 
